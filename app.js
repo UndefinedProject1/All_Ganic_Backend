@@ -22,6 +22,39 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
+// express는 app변수 -> http -> socket.io연결(채팅구현)
+var http = require('http').createServer(app);
+app.io = require('socket.io')(http,{cors:{origins:'*:*'}});
+
+
+// 클라이언트(vue, react, android등)이 접속했을 때
+app.io.on('connection', function(socket){
+  // 접속한 소켓 정보확인(회원판별)
+  console.log(`connection ${socket}`);
+
+  // 클라이언트에서 데이터(문자, 파일)가 전송되었을 때
+  socket.on('payment', function(data){
+    //전송된 데이터 출력
+    console.log(data);
+
+    // 전체 클라이언트로 데이터를 전송
+    app.io.emit('sell', {
+      sell   : data.data.sell
+    })
+  })
+
+  // 클라이언트에서 데이터(문자, 파일)가 전송되었을 때
+  socket.on('addcart', function(data){
+    //전송된 데이터 출력
+    console.log(data);
+
+    // 전체 클라이언트로 데이터를 전송
+    app.io.emit('cartin', {
+      cartin   : data.data.cartin
+    })
+  })
+});
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
