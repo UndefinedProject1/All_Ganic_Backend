@@ -43,14 +43,33 @@ app.io.on('connection', function(socket){
     })
   })
 
-  // 클라이언트에서 데이터(문자, 파일)가 전송되었을 때
+  // 장바구니 추가
   socket.on('addcart', function(data){
-    //전송된 데이터 출력
     console.log(data);
 
-    // 전체 클라이언트로 데이터를 전송
+    // 장바구니 물품 추가알람
     app.io.emit('cartin', {
       cartin   : data.data.cartin
+    })
+  })
+
+  // 문의글 작성되면
+  socket.on('addQuestion', function(data){
+    console.log(data);
+
+    // 관리자페이지에 알람
+    app.io.emit('QuestionIn', {
+      QuestionIn   : data.data.QuestionIn
+    })
+  })
+
+  // 문의글에 대한 답글 작성 시
+  socket.on('ReplyQuestion', function(data){
+    console.log(data);
+
+    // 알람에서 삭제 및 리스트에서 삭제
+    app.io.emit('QuestionOut', {
+      QuestionOut   : data.data.QuestionOut
     })
   })
 });
