@@ -72,6 +72,26 @@ app.io.on('connection', function(socket){
       QuestionOut   : data.data.QuestionOut
     })
   })
+
+  // 위조금액 적발 시 
+  socket.on('addReport', function(data){
+    console.log(data);
+
+    // 회원관리에서 위조금액 알람
+    app.io.emit('alretReport', {
+      alretReport : data.data.alretReport
+    })
+  })
+
+  // 회원탈퇴 시 
+  socket.on('deleteMember', function(data){
+    console.log(data);
+
+    // 회원리스트에서 해당 회원 삭제
+    app.io.emit('successDelete', {
+      successDelete : data.data.successDelete
+    })
+  })
 });
 
 // catch 404 and forward to error handler
